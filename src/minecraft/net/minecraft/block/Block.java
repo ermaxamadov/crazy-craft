@@ -1459,6 +1459,15 @@ public class Block
         registerBlock(251, "concrete", (new BlockColored(Material.ROCK)).setHardness(1.8F).setSoundType(SoundType.STONE).setUnlocalizedName("concrete"));
         registerBlock(252, "concrete_powder", (new BlockConcretePowder()).setHardness(0.5F).setSoundType(SoundType.SAND).setUnlocalizedName("concretePowder"));
         registerBlock(255, "structure_block", (new BlockStructure()).setBlockUnbreakable().setResistance(6000000.0F).setUnlocalizedName("structureBlock"));
+        registerBlock(3000, "crazycraft_old_frame", net.minecraft.crazycraft.old.CrazycraftOldBlocks.FRAME);
+        registerBlock(3001, "crazycraft_old_portal", net.minecraft.crazycraft.old.CrazycraftOldBlocks.PORTAL);
+        for (int i = 0; i < net.minecraft.crazycraft.CrazycraftContentBlocks.OLD.length; ++i)
+            registerBlock(3100 + i, "crazycraft_" + net.minecraft.crazycraft.CrazycraftContentBlocks.OLD_NAMES[i],
+                net.minecraft.crazycraft.CrazycraftContentBlocks.OLD[i]);
+        for (int i = 0; i < net.minecraft.crazycraft.CrazycraftContentBlocks.FUTURE.length; ++i)
+            registerBlock(3200 + i, "crazycraft_" + net.minecraft.crazycraft.CrazycraftContentBlocks.FUTURE_NAMES[i],
+                net.minecraft.crazycraft.CrazycraftContentBlocks.FUTURE[i]);
+        registerBlock(3300, "crazycraft_future_portal", net.minecraft.crazycraft.CrazycraftContentBlocks.FUTURE_PORTAL);
         REGISTRY.validateKey();
 
         for (Block block15 : REGISTRY)

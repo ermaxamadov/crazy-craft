@@ -41,6 +41,7 @@ public class ServerCommandManager extends CommandHandler implements ICommandList
     {
         this.server = serverIn;
         this.registerCommand(new CommandTime());
+        this.registerCommand(new CommandCrazycraft());
         this.registerCommand(new CommandGameMode());
         this.registerCommand(new CommandDifficulty());
         this.registerCommand(new CommandDefaultGameMode());

@@ -58,6 +58,18 @@ public class LanguageManager implements IResourceManagerReloadListener
                 LOGGER.warn("Unable to parse language metadata section of resourcepack: {}", iresourcepack.getPackName(), ioexception);
             }
         }
+
+        // The default pack may not expose language metadata in an MCP workspace.
+        if (!this.languageMap.containsKey("en_us"))
+        {
+            this.languageMap.put("en_us", new Language("en_us", "United States", "English", false));
+        }
+
+        // The built-in Crazycraft locale lives in assets/minecraft/lang.
+        if (!this.languageMap.containsKey("uz_uz"))
+        {
+            this.languageMap.put("uz_uz", new Language("uz_uz", "O‘zbekiston", "O‘zbekcha", false));
+        }
     }
 
     public void onResourceManagerReload(IResourceManager resourceManager)
@@ -75,7 +87,7 @@ public class LanguageManager implements IResourceManagerReloadListener
 
     public boolean isCurrentLocaleUnicode()
     {
-        return CURRENT_LOCALE.isUnicode();
+        return "uz_uz".equals(this.currentLanguage) || CURRENT_LOCALE.isUnicode();
     }
 
     public boolean isCurrentLanguageBidirectional()

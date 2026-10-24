@@ -216,7 +216,7 @@ public class GuiVideoSettings extends GuiScreenOF
         }
 
         this.drawString(this.fontRenderer, s, 2, this.height - 10, 8421504);
-        String s2 = "Minecraft 1.12";
+        String s2 = "Crazycraft v1.1";
         int i = this.fontRenderer.getStringWidth(s2);
         this.drawString(this.fontRenderer, s2, this.width - i - 2, this.height - 10, 8421504);
         super.drawScreen(mouseX, mouseY, partialTicks);

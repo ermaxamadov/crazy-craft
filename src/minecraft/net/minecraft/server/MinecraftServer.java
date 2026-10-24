@@ -259,7 +259,7 @@ public abstract class MinecraftServer implements ICommandSender, Runnable, IThre
     {
         this.convertMapIfNeeded(saveName);
         this.setUserMessage("menu.loadingLevel");
-        this.worlds = new WorldServer[3];
+        this.worlds = new WorldServer[5];
         this.timeOfLastDimensionTick = new long[this.worlds.length][100];
         ISaveHandler isavehandler = this.anvilConverterForAnvilFile.getSaveLoader(saveName, true);
         this.setResourcePackFromWorld(this.getFolderName(), isavehandler);
@@ -303,6 +303,11 @@ public abstract class MinecraftServer implements ICommandSender, Runnable, IThre
             if (i == 2)
             {
                 j = 1;
+            }
+
+            if (i >= 3)
+            {
+                j = i - 1;
             }
 
             if (i == 0)
@@ -860,10 +865,13 @@ public abstract class MinecraftServer implements ICommandSender, Runnable, IThre
         {
             return this.worlds[1];
         }
-        else
+
+        if (dimension >= 1 && dimension <= 3)
         {
-            return dimension == 1 ? this.worlds[2] : this.worlds[0];
+            return this.worlds[dimension + 1];
         }
+
+        return this.worlds[0];
     }
 
     /**

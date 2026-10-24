@@ -636,7 +636,33 @@ public abstract class PlayerList
         float f = entityIn.rotationYaw;
         oldWorldIn.profiler.startSection("moving");
 
-        if (entityIn.dimension == -1)
+        if (entityIn.dimension >= 2 || lastDimension >= 2)
+        {
+            // Send Old Dimension portals to fresh prehistoric terrain while retaining
+            // a reversible coordinate mapping back to the original overworld gate.
+            EntityPlayerMP crazycraftPlayer = entityIn instanceof EntityPlayerMP ? (EntityPlayerMP)entityIn : null;
+            if (lastDimension == 0 && entityIn.dimension == 2
+                && crazycraftPlayer != null && crazycraftPlayer.crazycraftReturnValid)
+            {
+                d0 = crazycraftPlayer.crazycraftReturnX + 8192.0D;
+                d1 = crazycraftPlayer.crazycraftReturnZ + 8192.0D;
+            }
+            else if (lastDimension == 2 && entityIn.dimension == 0
+                && crazycraftPlayer != null && crazycraftPlayer.crazycraftReturnValid)
+            {
+                d0 = crazycraftPlayer.crazycraftReturnX;
+                d1 = crazycraftPlayer.crazycraftReturnZ;
+                crazycraftPlayer.crazycraftReturnValid = false;
+            }
+            BlockPos landing = toWorldIn.getHeight(new BlockPos(d0, 0.0D, d1));
+            entityIn.setLocationAndAngles(d0, (double)landing.getY() + 1.0D, d1, entityIn.rotationYaw, entityIn.rotationPitch);
+
+            if (entityIn.isEntityAlive())
+            {
+                oldWorldIn.updateEntityWithOptionalForce(entityIn, false);
+            }
+        }
+        else if (entityIn.dimension == -1)
         {
             d0 = MathHelper.clamp(d0 / 8.0D, toWorldIn.getWorldBorder().minX() + 16.0D, toWorldIn.getWorldBorder().maxX() - 16.0D);
             d1 = MathHelper.clamp(d1 / 8.0D, toWorldIn.getWorldBorder().minZ() + 16.0D, toWorldIn.getWorldBorder().maxZ() - 16.0D);
@@ -693,7 +719,10 @@ public abstract class PlayerList
             if (entityIn.isEntityAlive())
             {
                 entityIn.setLocationAndAngles(d0, entityIn.posY, d1, entityIn.rotationYaw, entityIn.rotationPitch);
-                toWorldIn.getDefaultTeleporter().placeInPortal(entityIn, f);
+                if (entityIn.dimension < 2 && lastDimension < 2)
+                {
+                    toWorldIn.getDefaultTeleporter().placeInPortal(entityIn, f);
+                }
                 toWorldIn.spawnEntity(entityIn);
                 toWorldIn.updateEntityWithOptionalForce(entityIn, false);
             }

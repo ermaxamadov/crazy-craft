@@ -2,18 +2,22 @@ package net.minecraft.creativetab;
 
 import javax.annotation.Nullable;
 import net.minecraft.block.BlockDoublePlant;
+import net.minecraft.crazycraft.old.CrazycraftOldBlocks;
+import net.minecraft.entity.EntityList;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.PotionTypes;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 
 public abstract class CreativeTabs
 {
-    public static final CreativeTabs[] CREATIVE_TAB_ARRAY = new CreativeTabs[12];
+    public static final CreativeTabs[] CREATIVE_TAB_ARRAY = new CreativeTabs[14];
     public static final CreativeTabs BUILDING_BLOCKS = new CreativeTabs(0, "buildingBlocks")
     {
         public ItemStack getTabIconItem()
@@ -107,6 +111,55 @@ public abstract class CreativeTabs
             return new ItemStack(Item.getItemFromBlock(Blocks.CHEST));
         }
     }).setBackgroundImageName("inventory.png").setNoScrollbar().setNoTitle();
+    public static final CreativeTabs CRAZYCRAFT_OLD = new CreativeTabs(12, "crazycraftOld")
+    {
+        public ItemStack getTabIconItem()
+        {
+            return new ItemStack(CrazycraftOldBlocks.FRAME);
+        }
+
+        @Override
+        public void displayAllRelevantItems(NonNullList<ItemStack> items)
+        {
+            super.displayAllRelevantItems(items);
+            addDinosaurEgg(items, "crazycraft_trex");
+            addDinosaurEgg(items, "crazycraft_triceratops");
+            addDinosaurEgg(items, "crazycraft_pteranodon");
+            addDinosaurEgg(items, "crazycraft_stegosaurus");
+            addDinosaurEgg(items, "crazycraft_velociraptor");
+            addDinosaurEgg(items, "crazycraft_spinosaurus");
+            addDinosaurEgg(items, "crazycraft_carnotaurus");
+            addDinosaurEgg(items, "crazycraft_allosaurus");
+            addDinosaurEgg(items, "crazycraft_dilophosaurus");
+            addDinosaurEgg(items, "crazycraft_brachiosaurus");
+            addDinosaurEgg(items, "crazycraft_ankylosaurus");
+            addDinosaurEgg(items, "crazycraft_parasaurolophus");
+            addDinosaurEgg(items, "crazycraft_iguanodon");
+        }
+
+        private void addDinosaurEgg(NonNullList<ItemStack> items, String id)
+        {
+            ItemStack egg = new ItemStack(Items.SPAWN_EGG);
+            ItemMonsterPlacer.applyEntityIdToItemStack(egg, new ResourceLocation(id));
+            items.add(egg);
+        }
+    };
+    public static final CreativeTabs CRAZYCRAFT_FUTURE = new CreativeTabs(13, "crazycraftFuture")
+    {
+        public ItemStack getTabIconItem()
+        {
+            return new ItemStack(net.minecraft.crazycraft.CrazycraftContentBlocks.FUTURE[2]);
+        }
+
+        @Override
+        public void displayAllRelevantItems(NonNullList<ItemStack> items)
+        {
+            super.displayAllRelevantItems(items);
+            ItemStack egg = new ItemStack(Items.SPAWN_EGG);
+            ItemMonsterPlacer.applyEntityIdToItemStack(egg, new ResourceLocation("crazycraft_worker_bot"));
+            items.add(egg);
+        }
+    };
     private final int tabIndex;
     private final String tabLabel;
 
@@ -204,6 +257,11 @@ public abstract class CreativeTabs
     public boolean isTabInFirstRow()
     {
         return this.tabIndex < 6;
+    }
+
+    public int getTabRow()
+    {
+        return this.tabIndex / 6;
     }
 
     public boolean isAlignedRight()

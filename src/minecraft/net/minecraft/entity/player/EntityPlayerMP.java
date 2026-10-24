@@ -132,6 +132,9 @@ public class EntityPlayerMP extends EntityPlayer implements IContainerListener
 
     /** player X position as seen by PlayerManager */
     public double managedPosX;
+    public boolean crazycraftReturnValid;
+    public double crazycraftReturnX;
+    public double crazycraftReturnZ;
 
     /** player Z position as seen by PlayerManager */
     public double managedPosZ;
@@ -239,6 +242,12 @@ public class EntityPlayerMP extends EntityPlayer implements IContainerListener
     public void readEntityFromNBT(NBTTagCompound compound)
     {
         super.readEntityFromNBT(compound);
+        this.crazycraftReturnValid = compound.getBoolean("CrazycraftReturnValid");
+        if (this.crazycraftReturnValid)
+        {
+            this.crazycraftReturnX = compound.getDouble("CrazycraftReturnX");
+            this.crazycraftReturnZ = compound.getDouble("CrazycraftReturnZ");
+        }
 
         if (compound.hasKey("playerGameType", 99))
         {
@@ -293,6 +302,12 @@ public class EntityPlayerMP extends EntityPlayer implements IContainerListener
     public void writeEntityToNBT(NBTTagCompound compound)
     {
         super.writeEntityToNBT(compound);
+        compound.setBoolean("CrazycraftReturnValid", this.crazycraftReturnValid);
+        if (this.crazycraftReturnValid)
+        {
+            compound.setDouble("CrazycraftReturnX", this.crazycraftReturnX);
+            compound.setDouble("CrazycraftReturnZ", this.crazycraftReturnZ);
+        }
         compound.setInteger("playerGameType", this.interactionManager.getGameType().getID());
         compound.setBoolean("seenCredits", this.seenCredits);
 

@@ -268,6 +268,10 @@ public class ItemMonsterPlacer extends Item
         {
             for (EntityList.EntityEggInfo entitylist$entityegginfo : EntityList.ENTITY_EGGS.values())
             {
+                if (entitylist$entityegginfo.spawnedID.getResourcePath().startsWith("crazycraft_") && tab != CreativeTabs.SEARCH)
+                {
+                    continue;
+                }
                 ItemStack itemstack = new ItemStack(this, 1);
                 applyEntityIdToItemStack(itemstack, entitylist$entityegginfo.spawnedID);
                 items.add(itemstack);

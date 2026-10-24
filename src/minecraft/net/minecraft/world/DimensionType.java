@@ -7,7 +7,9 @@ public enum DimensionType
 {
     OVERWORLD(0, "overworld", "", WorldProviderSurface.class),
     NETHER(-1, "the_nether", "_nether", WorldProviderHell.class),
-    THE_END(1, "the_end", "_end", WorldProviderEnd.class);
+    THE_END(1, "the_end", "_end", WorldProviderEnd.class),
+    CRAZYCRAFT_OLD(2, "crazycraft_old", "_crazycraft_old", WorldProviderCrazycraftOld.class),
+    CRAZYCRAFT_FUTURE(3, "crazycraft_future", "_crazycraft_future", WorldProviderCrazycraftFuture.class);
 
     private final int id;
     private final String name;

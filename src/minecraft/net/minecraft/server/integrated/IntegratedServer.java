@@ -107,7 +107,7 @@ public class IntegratedServer extends MinecraftServer
         }
         else
         {
-            this.worlds = new WorldServer[3];
+            this.worlds = new WorldServer[5];
             this.timeOfLastDimensionTick = new long[this.worlds.length][100];
             this.setResourcePackFromWorld(this.getFolderName(), isavehandler);
 
@@ -132,6 +132,11 @@ public class IntegratedServer extends MinecraftServer
                 if (l == 2)
                 {
                     i1 = 1;
+                }
+
+                if (l >= 3)
+                {
+                    i1 = l - 1;
                 }
 
                 if (l == 0)

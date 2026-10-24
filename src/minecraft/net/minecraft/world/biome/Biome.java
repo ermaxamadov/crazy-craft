@@ -470,6 +470,16 @@ public abstract class Biome
      */
     public static void registerBiomes()
     {
+        registerBiome(200, "crazycraft_old", new BiomeCrazycraftOld());
+        registerBiome(210, "crazycraft_future", new BiomeCrazycraftFuture());
+        String[] oldRegions = {"volcanic_lands", "prehistoric_savanna", "fossil_desert", "ancient_swamp",
+            "redwood_forest", "prehistoric_coast", "ancient_canyon", "tar_pit", "ancient_plains"};
+        for (int i = 0; i < oldRegions.length; ++i)
+            registerBiome(201 + i, "crazycraft_" + oldRegions[i], new BiomeCrazycraftRegion(false, i));
+        String[] futureRegions = {"floating_islands", "crystal_desert", "cyber_mountains", "space_station",
+            "neon_forest", "robot_factory", "asteroid_field"};
+        for (int i = 0; i < futureRegions.length; ++i)
+            registerBiome(211 + i, "crazycraft_" + futureRegions[i], new BiomeCrazycraftRegion(true, i));
         registerBiome(0, "ocean", new BiomeOcean((new Biome.BiomeProperties("Ocean")).setBaseHeight(-1.0F).setHeightVariation(0.1F)));
         registerBiome(1, "plains", new BiomePlains(false, (new Biome.BiomeProperties("Plains")).setBaseHeight(0.125F).setHeightVariation(0.05F).setTemperature(0.8F).setRainfall(0.4F)));
         registerBiome(2, "desert", new BiomeDesert((new Biome.BiomeProperties("Desert")).setBaseHeight(0.125F).setHeightVariation(0.05F).setTemperature(2.0F).setRainfall(0.0F).setRainDisabled()));

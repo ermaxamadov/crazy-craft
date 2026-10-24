@@ -781,7 +781,7 @@ public class GuiContainerCreative extends InventoryEffectRenderer
         }
         else
         {
-            k = k + this.ySize;
+            k = k + this.ySize + (tab.getTabRow() - 1) * 28;
         }
 
         return mouseX >= j && mouseX <= j + 28 && mouseY >= k && mouseY <= k + 32;
@@ -812,7 +812,7 @@ public class GuiContainerCreative extends InventoryEffectRenderer
         }
         else
         {
-            k = k + this.ySize;
+            k = k + this.ySize + (tab.getTabRow() - 1) * 28;
         }
 
         if (this.isPointInRegion(j + 3, k + 3, 23, 27, mouseX, mouseY))
@@ -862,7 +862,7 @@ public class GuiContainerCreative extends InventoryEffectRenderer
         else
         {
             k += 64;
-            i1 = i1 + (this.ySize - 4);
+            i1 = i1 + (this.ySize - 4) + (tab.getTabRow() - 1) * 28;
         }
 
         GlStateManager.disableLighting();

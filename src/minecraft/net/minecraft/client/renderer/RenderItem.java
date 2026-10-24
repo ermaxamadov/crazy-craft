@@ -626,6 +626,15 @@ public class RenderItem implements IResourceManagerReloadListener
 
     private void registerItems()
     {
+        this.registerBlock(net.minecraft.crazycraft.old.CrazycraftOldBlocks.FRAME, "crazycraft_old_frame");
+        this.registerBlock(net.minecraft.crazycraft.old.CrazycraftOldBlocks.PORTAL, "crazycraft_old_portal");
+        for (int i = 0; i < net.minecraft.crazycraft.CrazycraftContentBlocks.OLD.length; ++i)
+            this.registerBlock(net.minecraft.crazycraft.CrazycraftContentBlocks.OLD[i],
+                "crazycraft_" + net.minecraft.crazycraft.CrazycraftContentBlocks.OLD_NAMES[i]);
+        for (int i = 0; i < net.minecraft.crazycraft.CrazycraftContentBlocks.FUTURE.length; ++i)
+            this.registerBlock(net.minecraft.crazycraft.CrazycraftContentBlocks.FUTURE[i],
+                "crazycraft_" + net.minecraft.crazycraft.CrazycraftContentBlocks.FUTURE_NAMES[i]);
+        this.registerBlock(net.minecraft.crazycraft.CrazycraftContentBlocks.FUTURE_PORTAL, "crazycraft_future_portal");
         this.registerBlock(Blocks.ANVIL, "anvil_intact");
         this.registerBlock(Blocks.ANVIL, 1, "anvil_slightly_damaged");
         this.registerBlock(Blocks.ANVIL, 2, "anvil_very_damaged");

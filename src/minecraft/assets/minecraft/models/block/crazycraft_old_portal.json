@@ -1,0 +1,1 @@
+{"textures":{"surface":"blocks/crazycraft_old_portal","particle":"blocks/crazycraft_old_portal"},"elements":[{"from":[0,0,7],"to":[16,16,9],"faces":{"north":{"texture":"#surface"},"south":{"texture":"#surface"},"west":{"texture":"#surface"},"east":{"texture":"#surface"},"up":{"texture":"#surface"},"down":{"texture":"#surface"}}}]}

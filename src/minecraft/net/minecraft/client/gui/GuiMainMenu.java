@@ -2,7 +2,6 @@ package net.minecraft.client.gui;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.google.common.util.concurrent.Runnables;
 import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.IOException;
@@ -37,7 +36,6 @@ import net.minecraft.world.storage.WorldInfo;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.glu.Project;
 
@@ -45,13 +43,6 @@ public class GuiMainMenu extends GuiScreen
 {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Random RANDOM = new Random();
-
-    /**
-     * A random number between 0.0 and 1.0, used to determine if the title screen says <a
-     * href="https://minecraft.gamepedia.com/Menu_screen#Minceraft">Minceraft</a> instead of Minecraft. Set during
-     * construction; if the value is less than .0001, then Minceraft is displayed.
-     */
-    private final float minceraftRoll;
 
     /** The splash message. */
     private String splashText;
@@ -98,7 +89,7 @@ public class GuiMainMenu extends GuiScreen
     /** Link to the Mojang Support about minimum requirements */
     private String openGLWarningLink;
     private static final ResourceLocation SPLASH_TEXTS = new ResourceLocation("texts/splashes.txt");
-    private static final ResourceLocation MINECRAFT_TITLE_TEXTURES = new ResourceLocation("textures/gui/title/minecraft.png");
+    private static final ResourceLocation CRAZYCRAFT_TITLE = new ResourceLocation("textures/gui/title/crazycraft_title.png");
 
     /** An array of all the paths to the panorama pictures. */
     private static final ResourceLocation[] TITLE_PANORAMA_PATHS = new ResourceLocation[] {new ResourceLocation("textures/gui/title/background/panorama_0.png"), new ResourceLocation("textures/gui/title/background/panorama_1.png"), new ResourceLocation("textures/gui/title/background/panorama_2.png"), new ResourceLocation("textures/gui/title/background/panorama_3.png"), new ResourceLocation("textures/gui/title/background/panorama_4.png"), new ResourceLocation("textures/gui/title/background/panorama_5.png")};
@@ -115,8 +106,6 @@ public class GuiMainMenu extends GuiScreen
      * drawn at the same time). May be null.
      */
     private GuiScreen realmsNotification;
-    private int widthCopyright;
-    private int widthCopyrightRest;
     private GuiButton modButton;
     private GuiScreen modUpdateNotification;
 
@@ -165,7 +154,6 @@ public class GuiMainMenu extends GuiScreen
             IOUtils.closeQuietly((Closeable)iresource);
         }
 
-        this.minceraftRoll = RANDOM.nextFloat();
         this.openGLWarning1 = "";
 
         if (!GLContext.getCapabilities().OpenGL20 && !OpenGlHelper.areShadersSupported())
@@ -219,8 +207,6 @@ public class GuiMainMenu extends GuiScreen
     {
         this.viewportTexture = new DynamicTexture(256, 256);
         this.backgroundTexture = this.mc.getTextureManager().getDynamicTextureLocation("background", this.viewportTexture);
-        this.widthCopyright = this.fontRenderer.getStringWidth("Copyright Mojang AB. Do not distribute!");
-        this.widthCopyrightRest = this.width - this.widthCopyright - 2;
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
 
@@ -249,8 +235,8 @@ public class GuiMainMenu extends GuiScreen
             this.addSingleplayerMultiplayerButtons(j, 24);
         }
 
-        this.buttonList.add(new GuiButton(0, this.width / 2 - 100, j + 72 + 12, 98, 20, I18n.format("menu.options")));
-        this.buttonList.add(new GuiButton(4, this.width / 2 + 2, j + 72 + 12, 98, 20, I18n.format("menu.quit")));
+        this.buttonList.add(new GuiCrazycraftButton(0, this.width / 2 - 100, j + 72 + 12, 98, 20, I18n.format("menu.options"), 0xFF6C8493));
+        this.buttonList.add(new GuiCrazycraftButton(4, this.width / 2 + 2, j + 72 + 12, 98, 20, I18n.format("menu.quit"), 0xFF6C8493));
         this.buttonList.add(new GuiButtonLanguage(5, this.width / 2 - 124, j + 72 + 12));
 
         synchronized (this.threadLock)
@@ -290,17 +276,17 @@ public class GuiMainMenu extends GuiScreen
      */
     private void addSingleplayerMultiplayerButtons(int p_73969_1_, int p_73969_2_)
     {
-        this.buttonList.add(new GuiButton(1, this.width / 2 - 100, p_73969_1_, I18n.format("menu.singleplayer")));
-        this.buttonList.add(new GuiButton(2, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 1, I18n.format("menu.multiplayer")));
+        this.buttonList.add(new GuiCrazycraftButton(1, this.width / 2 - 100, p_73969_1_, I18n.format("menu.singleplayer"), 0xFFFFA640));
+        this.buttonList.add(new GuiCrazycraftButton(2, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 1, I18n.format("menu.multiplayer"), 0xFF35D8F4));
 
         if (Reflector.GuiModList_Constructor.exists())
         {
-            this.realmsButton = this.addButton(new GuiButton(14, this.width / 2 + 2, p_73969_1_ + p_73969_2_ * 2, 98, 20, I18n.format("menu.online").replace("Minecraft", "").trim()));
-            this.buttonList.add(this.modButton = new GuiButton(6, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 2, 98, 20, I18n.format("fml.menu.mods")));
+            this.realmsButton = this.addButton(new GuiCrazycraftButton(14, this.width / 2 + 2, p_73969_1_ + p_73969_2_ * 2, 98, 20, I18n.format("menu.online").replace("Minecraft", "").trim(), 0xFF35D8F4));
+            this.buttonList.add(this.modButton = new GuiCrazycraftButton(6, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 2, 98, 20, I18n.format("fml.menu.mods"), 0xFFFFA640));
         }
         else
         {
-            this.realmsButton = this.addButton(new GuiButton(14, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 2, I18n.format("menu.online")));
+            this.realmsButton = this.addButton(new GuiCrazycraftButton(14, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 2, I18n.format("menu.online").replace("Minecraft", "").trim(), 0xFF35D8F4));
         }
     }
 
@@ -309,8 +295,8 @@ public class GuiMainMenu extends GuiScreen
      */
     private void addDemoButtons(int p_73972_1_, int p_73972_2_)
     {
-        this.buttonList.add(new GuiButton(11, this.width / 2 - 100, p_73972_1_, I18n.format("menu.playdemo")));
-        this.buttonResetDemo = this.addButton(new GuiButton(12, this.width / 2 - 100, p_73972_1_ + p_73972_2_ * 1, I18n.format("menu.resetdemo")));
+        this.buttonList.add(new GuiCrazycraftButton(11, this.width / 2 - 100, p_73972_1_, I18n.format("menu.playdemo"), 0xFFFFA640));
+        this.buttonResetDemo = this.addButton(new GuiCrazycraftButton(12, this.width / 2 - 100, p_73972_1_ + p_73972_2_ * 1, I18n.format("menu.resetdemo"), 0xFF35D8F4));
         ISaveFormat isaveformat = this.mc.getSaveLoader();
         WorldInfo worldinfo = isaveformat.getWorldInfo("Demo_World");
 
@@ -611,9 +597,6 @@ public class GuiMainMenu extends GuiScreen
         GlStateManager.disableAlpha();
         this.renderSkybox(mouseX, mouseY, partialTicks);
         GlStateManager.enableAlpha();
-        int i = 274;
-        int j = this.width / 2 - 137;
-        int k = 30;
         int l = -2130706433;
         int i1 = 16777215;
         int j1 = 0;
@@ -638,37 +621,20 @@ public class GuiMainMenu extends GuiScreen
             this.drawGradientRect(0, 0, this.width, this.height, j1, k1);
         }
 
-        this.mc.getTextureManager().bindTexture(MINECRAFT_TITLE_TEXTURES);
+        this.drawGradientRect(0, 0, this.width / 2, this.height, 0x302A1200, 0x60331600);
+        this.drawGradientRect(this.width / 2, 0, this.width, this.height, 0x3010254A, 0x6000193E);
+        int logoWidth = Math.min(350, this.width - 24);
+        int logoHeight = logoWidth / 4;
+        this.mc.getTextureManager().bindTexture(CRAZYCRAFT_TITLE);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-
-        if ((double)this.minceraftRoll < 1.0E-4D)
-        {
-            this.drawTexturedModalRect(j + 0, 30, 0, 0, 99, 44);
-            this.drawTexturedModalRect(j + 99, 30, 129, 0, 27, 44);
-            this.drawTexturedModalRect(j + 99 + 26, 30, 126, 0, 3, 44);
-            this.drawTexturedModalRect(j + 99 + 26 + 3, 30, 99, 0, 26, 44);
-            this.drawTexturedModalRect(j + 155, 30, 0, 45, 155, 44);
-        }
-        else
-        {
-            this.drawTexturedModalRect(j + 0, 30, 0, 0, 155, 44);
-            this.drawTexturedModalRect(j + 155, 30, 0, 45, 155, 44);
-        }
+        Gui.drawScaledCustomSizeModalRect((this.width - logoWidth) / 2, 16, 0.0F, 0.0F, 1024, 256, logoWidth, logoHeight, 1024.0F, 256.0F);
 
         if (Reflector.ForgeHooksClient_renderMainMenu.exists())
         {
             this.splashText = Reflector.callString(Reflector.ForgeHooksClient_renderMainMenu, this, this.fontRenderer, this.width, this.height, this.splashText);
         }
 
-        GlStateManager.pushMatrix();
-        GlStateManager.translate((float)(this.width / 2 + 90), 70.0F, 0.0F);
-        GlStateManager.rotate(-20.0F, 0.0F, 0.0F, 1.0F);
-        float f = 1.8F - MathHelper.abs(MathHelper.sin((float)(Minecraft.getSystemTime() % 1000L) / 1000.0F * ((float)Math.PI * 2F)) * 0.1F);
-        f = f * 100.0F / (float)(this.fontRenderer.getStringWidth(this.splashText) + 32);
-        GlStateManager.scale(f, f, f);
-        this.drawCenteredString(this.fontRenderer, this.splashText, 0, -8, -256);
-        GlStateManager.popMatrix();
-        String s = "Minecraft 1.12";
+        String s = "Crazycraft v1.1";
 
         if (this.mc.isDemo())
         {
@@ -697,13 +663,6 @@ public class GuiMainMenu extends GuiScreen
         else
         {
             this.drawString(this.fontRenderer, s, 2, this.height - 10, -1);
-        }
-
-        this.drawString(this.fontRenderer, "Copyright Mojang AB. Do not distribute!", this.widthCopyrightRest, this.height - 10, -1);
-
-        if (mouseX > this.widthCopyrightRest && mouseX < this.widthCopyrightRest + this.widthCopyright && mouseY > this.height - 10 && mouseY < this.height && Mouse.isInsideWindow())
-        {
-            drawRect(this.widthCopyrightRest, this.height - 1, this.widthCopyrightRest + this.widthCopyright, this.height, -1);
         }
 
         if (this.openGLWarning1 != null && !this.openGLWarning1.isEmpty())
@@ -746,11 +705,6 @@ public class GuiMainMenu extends GuiScreen
         if (this.areRealmsNotificationsEnabled())
         {
             this.realmsNotification.mouseClicked(mouseX, mouseY, mouseButton);
-        }
-
-        if (mouseX > this.widthCopyrightRest && mouseX < this.widthCopyrightRest + this.widthCopyright && mouseY > this.height - 10 && mouseY < this.height)
-        {
-            this.mc.displayGuiScreen(new GuiWinGame(false, Runnables.doNothing()));
         }
     }
 

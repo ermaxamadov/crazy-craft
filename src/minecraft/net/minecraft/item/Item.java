@@ -574,6 +574,13 @@ public class Item
 
     public static void registerItems()
     {
+        registerItemBlock(net.minecraft.crazycraft.old.CrazycraftOldBlocks.FRAME);
+        registerItemBlock(net.minecraft.crazycraft.old.CrazycraftOldBlocks.PORTAL);
+        for (net.minecraft.block.Block block : net.minecraft.crazycraft.CrazycraftContentBlocks.OLD)
+            registerItemBlock(block);
+        for (net.minecraft.block.Block block : net.minecraft.crazycraft.CrazycraftContentBlocks.FUTURE)
+            registerItemBlock(block);
+        registerItemBlock(net.minecraft.crazycraft.CrazycraftContentBlocks.FUTURE_PORTAL);
         registerItemBlock(Blocks.AIR, new ItemAir(Blocks.AIR));
         registerItemBlock(Blocks.STONE, (new ItemMultiTexture(Blocks.STONE, Blocks.STONE, new ItemMultiTexture.Mapper()
         {

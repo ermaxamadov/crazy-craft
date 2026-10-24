@@ -13,6 +13,8 @@ import com.mojang.authlib.GameProfileRepository;
 import com.mojang.authlib.minecraft.MinecraftSessionService;
 import com.mojang.authlib.properties.PropertyMap;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -221,7 +223,7 @@ import org.lwjgl.util.glu.GLU;
 public class Minecraft implements IThreadListener, ISnooperInfo
 {
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final ResourceLocation LOCATION_MOJANG_PNG = new ResourceLocation("textures/gui/title/mojang.png");
+    private static final ResourceLocation LOCATION_CRAZYCRAFT_LOADING = new ResourceLocation("textures/gui/title/mojang.png");
     public static final boolean IS_RUNNING_ON_MAC = Util.getOSType() == Util.EnumOS.OSX;
 
     /** A 10MiB preallocation to ensure the heap is reasonably sized. */
@@ -374,7 +376,7 @@ public class Minecraft implements IThreadListener, ISnooperInfo
     private TextureMap textureMapBlocks;
     private SoundHandler mcSoundHandler;
     private MusicTicker mcMusicTicker;
-    private ResourceLocation mojangLogo;
+    private ResourceLocation crazycraftLogo;
     private final MinecraftSessionService sessionService;
     private SkinManager skinManager;
     private final Queue < FutureTask<? >> scheduledTasks = Queues. < FutureTask<? >> newArrayDeque();
@@ -617,8 +619,8 @@ public class Minecraft implements IThreadListener, ISnooperInfo
             this.displayGuiScreen(new GuiMainMenu());
         }
 
-        this.renderEngine.deleteTexture(this.mojangLogo);
-        this.mojangLogo = null;
+        this.renderEngine.deleteTexture(this.crazycraftLogo);
+        this.crazycraftLogo = null;
         this.loadingScreen = new LoadingScreenRenderer(this);
         this.debugRenderer = new DebugRenderer(this);
 
@@ -692,7 +694,7 @@ public class Minecraft implements IThreadListener, ISnooperInfo
     private void createDisplay() throws LWJGLException
     {
         Display.setResizable(true);
-        Display.setTitle("Minecraft 1.12");
+        Display.setTitle("Crazycraft v1.1");
 
         try
         {
@@ -746,8 +748,8 @@ public class Minecraft implements IThreadListener, ISnooperInfo
 
             try
             {
-                inputstream = this.mcDefaultResourcePack.getInputStreamAssets(new ResourceLocation("icons/icon_16x16.png"));
-                inputstream1 = this.mcDefaultResourcePack.getInputStreamAssets(new ResourceLocation("icons/icon_32x32.png"));
+                inputstream = this.mcDefaultResourcePack.getInputStream(new ResourceLocation("textures/gui/title/crazycraft_icon_16.png"));
+                inputstream1 = this.mcDefaultResourcePack.getInputStream(new ResourceLocation("textures/gui/title/crazycraft_icon_32.png"));
 
                 if (inputstream != null && inputstream1 != null)
                 {
@@ -997,13 +999,27 @@ public class Minecraft implements IThreadListener, ISnooperInfo
 
         try
         {
-            inputstream = this.mcDefaultResourcePack.getInputStream(LOCATION_MOJANG_PNG);
-            this.mojangLogo = textureManagerInstance.getDynamicTextureLocation("logo", new DynamicTexture(ImageIO.read(inputstream)));
-            textureManagerInstance.bindTexture(this.mojangLogo);
+            File logoFile = new File("C:\\Users\\ermax\\Desktop\\birnima\\mcp940\\crazycraft_images\\logo_text.png");
+            BufferedImage logoImage;
+
+            if (logoFile.isFile())
+            {
+                logoImage = this.fitCrazycraftLogo(ImageIO.read(logoFile));
+                LOGGER.info("Crazycraft splash loaded from {}", logoFile.getAbsolutePath());
+            }
+            else
+            {
+                inputstream = this.mcDefaultResourcePack.getInputStream(LOCATION_CRAZYCRAFT_LOADING);
+                logoImage = ImageIO.read(inputstream);
+                LOGGER.info("Crazycraft splash loaded from {}", LOCATION_CRAZYCRAFT_LOADING);
+            }
+
+            this.crazycraftLogo = textureManagerInstance.getDynamicTextureLocation("logo", new DynamicTexture(logoImage));
+            textureManagerInstance.bindTexture(this.crazycraftLogo);
         }
         catch (IOException ioexception)
         {
-            LOGGER.error("Unable to load logo: {}", LOCATION_MOJANG_PNG, ioexception);
+            LOGGER.error("Unable to load logo: {}", LOCATION_CRAZYCRAFT_LOADING, ioexception);
         }
         finally
         {
@@ -1029,6 +1045,52 @@ public class Minecraft implements IThreadListener, ISnooperInfo
         GlStateManager.enableAlpha();
         GlStateManager.alphaFunc(516, 0.1F);
         this.updateDisplay();
+    }
+
+    private BufferedImage fitCrazycraftLogo(BufferedImage source)
+    {
+        int left = source.getWidth();
+        int top = source.getHeight();
+        int right = -1;
+        int bottom = -1;
+
+        for (int y = 0; y < source.getHeight(); ++y)
+        {
+            for (int x = 0; x < source.getWidth(); ++x)
+            {
+                if ((source.getRGB(x, y) >>> 24) > 8)
+                {
+                    left = Math.min(left, x);
+                    top = Math.min(top, y);
+                    right = Math.max(right, x);
+                    bottom = Math.max(bottom, y);
+                }
+            }
+        }
+
+        BufferedImage result = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
+
+        if (right >= left && bottom >= top)
+        {
+            int contentWidth = right - left + 1;
+            int contentHeight = bottom - top + 1;
+            double scale = Math.min(240.0D / (double)contentWidth, 240.0D / (double)contentHeight);
+            int width = (int)Math.round(contentWidth * scale);
+            int height = (int)Math.round(contentHeight * scale);
+            Graphics2D graphics = result.createGraphics();
+
+            try
+            {
+                graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+                graphics.drawImage(source, (256 - width) / 2, (256 - height) / 2, (256 + width) / 2, (256 + height) / 2, left, top, right + 1, bottom + 1, null);
+            }
+            finally
+            {
+                graphics.dispose();
+            }
+        }
+
+        return result;
     }
 
     /**
